@@ -1,39 +1,94 @@
-=== ACF History and Rollback ===
-Contributors: antigravity
-Tags: acf, history, rollback, audit, log
+=== Newsroom API ===
+Contributors: Code and Core
+Tags: api, rest-api, jwt, mobile-app, newsroom
 Requires at least: 5.0
 Tested up to: 6.4
 Stable tag: 1.0.0
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Tracks changes to ACF fields and allows rollback to previous versions.
+Provides custom REST API endpoints for the Newsroom mobile application, including authentication, content retrieval, and user personalization.
 
 == Description ==
 
-ACF History and Rollback is a lightweight plugin that tracks changes made to Advanced Custom Fields (ACF) values on Posts, Pages, and Custom Post Types.
+Newsroom API is a comprehensive WordPress plugin designed to power the backend of the Newsroom mobile application. It extends the WordPress REST API with custom endpoints for user authentication (JWT-based), content management, and personalized user experiences.
 
-**Features:**
-*   **Automatic Tracking:** Automatically logs field changes when a post is saved.
-*   **History Log:** View a detailed history of changes (Date, User, Old Value, New Value) in a metabox on the edit screen.
-*   **One-Click Rollback:** Revert any field to a previous value with a single click.
-*   **Diff Comparison:** (Planned) Visual diff of text changes.
+**Key Features:**
+
+*   **JWT Authentication:** Secure login, registration, and social login (Google, Facebook, Apple).
+*   **Custom Content Endpoints:** Optimized endpoints for fetching posts, categories, regions, and videos.
+*   **User Personalization:** Features for saving posts, following categories/regions, and tracking "continue reading" progress.
+*   **Interaction:** Feedback submission and ad placement management.
+*   **Custom Taxonomy:** Registers a 'region' taxonomy for localized content.
 
 == Installation ==
 
-1.  Upload the plugin files to the `/wp-content/plugins/acf-history-and-rollback` directory, or install the plugin through the WordPress plugins screen directly.
+1.  Upload the plugin files to the `/wp-content/plugins/newsroom-api` directory.
 2.  Activate the plugin through the 'Plugins' screen in WordPress.
-3.  Edit any post with ACF fields to see the "ACF Field History" metabox.
+3.  **Important:** Ensure the `JWT_SECRET_KEY` is defined in your `wp-config.php` file for security. If not defined, the plugin uses a default fallback (not recommended for production).
+    `define('JWT_SECRET_KEY', 'your-secret-key-here');`
+4.  Flush rewrite rules by visiting Settings > Permalinks and clicking "Save Changes".
 
-== Frequently Asked Questions ==
+== API Endpoints ==
 
-= Does this work with Repeater fields? =
-Yes, it stores the serialized value of complex fields.
+All endpoints are prefixed with `wp-json/`.
 
-= Where is the history stored? =
-The plugin creates a custom database table `wp_acf_history` to store the logs efficiently, keeping your `wp_postmeta` table clean.
+### Authentication
+
+*   `POST /loginapi/v1/login` - User login (username/password).
+*   `POST /myapi/v1/social-login` - Social login (provider: google, facebook, apple).
+*   `POST /registerapi/v1/register` - User registration.
+*   `POST /myapi/v1/verify-token` - Verify validity of a JWT token.
+*   `POST /myapi/v1/logout` - User logout.
+*   `POST /myapi/v1/forgot-password` - Initiate password reset.
+*   `POST /myapi/v1/verify-otp` - Verify password reset OTP.
+*   `POST /myapi/v1/reset-password` - Reset password with new value.
+*   `DELETE /myapi/v1/delete-account` - Delete user account permanently.
+
+### Content
+
+*   `GET /myapi/v1/home` - Aggregated data for the app home screen.
+*   `GET /myapi/v1/categories` - List all categories.
+*   `GET /myapi/v1/regions` - List all regions (custom taxonomy).
+*   `GET /myapi/v1/posts` - Get posts (supports filtering by category/region).
+*   `GET /myapi/v1/single-post` - Get a single post by ID.
+*   `GET /myapi/v1/post-detail` - Get detailed view of a post.
+*   `GET /myapi/v1/trending-posts` - Get list of trending posts.
+*   `GET /myapi/v1/latest-videos` - Get latest video posts.
+*   `GET /myapi/v1/search` - Search posts.
+
+### User User Profile & Personalization
+
+*   `GET /myapi/v1/profile` - Get current user profile.
+*   `POST /myapi/v1/update-profile` - Update user profile details.
+*   `GET /myapi/v1/user-settings` - Get user settings.
+*   `POST /myapi/v1/user-settings` - Update user settings.
+*   `POST /myapi/v1/save-selection` - Save user preferences for categories/regions.
+*   `GET /myapi/v1/recommended-posts` - Get posts based on user preferences.
+
+### Saved Posts (Bookmarks)
+
+*   `GET /myapi/v1/save-post` - Save a post for later.
+*   `DELETE /myapi/v1/remove-saved-post` - Remove a saved post.
+*   `GET /myapi/v1/show-saved-post` - List all saved posts.
+
+### Continue Reading
+
+*   `POST /myapi/v1/continue-reading` - Save reading progress.
+*   `GET /myapi/v1/get-continue-reading` - Get list of in-progress posts.
+*   `DELETE /myapi/v1/continue-reading` - Remove item from continue reading.
+
+### Notifications & Devices
+
+*   `POST /myapi/v1/register-token` - Register device FCM token.
+*   `GET /myapi/v1/notification` - Get user notifications.
+
+### Other
+
+*   `POST /myapi/v1/feedback` - Submit user feedback.
+*   `GET /myapi/v1/ad-placements` - Get advertisement placements.
+*   `POST /myapi/v1/advertise` - Setup advertisement parameters.
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0 =
 *   Initial release.
