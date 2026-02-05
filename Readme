@@ -1,2 +1,39 @@
-test
-ttttttttttttt
+=== ACF History and Rollback ===
+Contributors: antigravity
+Tags: acf, history, rollback, audit, log
+Requires at least: 5.0
+Tested up to: 6.4
+Stable tag: 1.0.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+Tracks changes to ACF fields and allows rollback to previous versions.
+
+== Description ==
+
+ACF History and Rollback is a lightweight plugin that tracks changes made to Advanced Custom Fields (ACF) values on Posts, Pages, and Custom Post Types.
+
+**Features:**
+*   **Automatic Tracking:** Automatically logs field changes when a post is saved.
+*   **History Log:** View a detailed history of changes (Date, User, Old Value, New Value) in a metabox on the edit screen.
+*   **One-Click Rollback:** Revert any field to a previous value with a single click.
+*   **Diff Comparison:** (Planned) Visual diff of text changes.
+
+== Installation ==
+
+1.  Upload the plugin files to the `/wp-content/plugins/acf-history-and-rollback` directory, or install the plugin through the WordPress plugins screen directly.
+2.  Activate the plugin through the 'Plugins' screen in WordPress.
+3.  Edit any post with ACF fields to see the "ACF Field History" metabox.
+
+== Frequently Asked Questions ==
+
+= Does this work with Repeater fields? =
+Yes, it stores the serialized value of complex fields.
+
+= Where is the history stored? =
+The plugin creates a custom database table `wp_acf_history` to store the logs efficiently, keeping your `wp_postmeta` table clean.
+
+== Changelog ==
+
+= 1.0.0 =
+*   Initial release.
